@@ -536,18 +536,18 @@ class Env {
   inline bool astar_search(const Eigen::Vector3i& start_idx,
                            const Eigen::Vector3i& end_idx,
                            std::vector<Eigen::Vector3i>& idx_path) {
-    auto stopCondition = [&](const NodePtr& ptr) -> bool {
+    auto stopCondition = [&](const NodePtr& ptr) -> bool { // check if the given node is within the desired distance to end_idx
       return ptr->h < desired_dist_ / mapPtr_->resolution;
     };
     auto calulateHeuristic = [&](const NodePtr& ptr) {
-      Eigen::Vector3i dp = end_idx - ptr->idx;
+      Eigen::Vector3i dp = end_idx - ptr->idx; // vector from current node to the end_idx node (target node, i think)
       int dx = dp.x();
       int dy = dp.y();
       int dz = dp.z();
       ptr->h = abs(dx) + abs(dy) + abs(dz);
-      double dx0 = (start_idx - end_idx).x();
-      double dy0 = (start_idx - end_idx).y();
-      double cross = fabs(dx * dy0 - dy * dx0) + abs(dz);
+      double dx0 = (start_idx - end_idx).x(); // x distance from target node to start node
+      double dy0 = (start_idx - end_idx).y(); // y distance from target node to start node
+      double cross = fabs(dx * dy0 - dy * dx0) + abs(dz); // what is this lol
       ptr->h += 0.001 * cross;
     };
     // initialization of datastructures
